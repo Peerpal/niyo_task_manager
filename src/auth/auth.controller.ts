@@ -13,14 +13,14 @@ export class AuthController {
     @Post('login')
     @ApiOperation({ summary: 'Log in a user' })
     @ApiResponse({ status: 200, description: 'Successful login', type: String })
-    async login(@Body() loginDto: LoginDto): Promise<{ access_token: string }> {
+    async login(@Body() loginDto: LoginDto): Promise<any> {
         return await this.authService.login(loginDto);
     }
 
     @Post('register')
     @ApiOperation({ summary: 'Register a new user' })
     @ApiResponse({ status: 201, description: 'User successfully registered', type: String })
-    async register(@Body() registerDto: RegisterDto): Promise<{ access_token: string }> {
+    async register(@Body() registerDto: RegisterDto): Promise<any> {
         return await this.authService.register(registerDto);
     }
 

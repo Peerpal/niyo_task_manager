@@ -13,9 +13,25 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
+     omit (obj, keys)  {
+        if (!keys.length) return obj;
+        const key = keys.pop();
+        const parts = key.split(".");
+        if (parts.length > 1) {
+            const { [parts[0]]: todo, ...rest } = obj;
+            return {
+                ...this.omit(rest, keys),
+                [parts[0]]: this.omit(todo, [parts[1]]),
+            };
+        }
+        const { [key]: omitted, ...rest } = obj;
+        return this.omit(rest, keys);
+    }
+
     async validateUser(email: string, pass: string): Promise<User> {
         const user = await this.usersService.findUserByEmail(email);
         if (user && (await bcrypt.compare(pass, user.password))) {
+            console.log(user);
             return user;
         }
         return null;
@@ -27,17 +43,21 @@ export class AuthService {
         const authUser = await this.validateUser(email, password)
         if(authUser) {
             return {
-                access_token: this.jwtService.sign(authUser.email),
+                access_token: this.jwtService.sign(authUser),
+                user: this.omit(authUser, ['password'])
             };
         }
 
-        return null;
+        return {};
 
 
     }
 
     async register({email, password}: RegisterDto) {
         const user = await this.usersService.createUser(email, password);
-        return this.login(user);
+        return  {
+            access_token: this.jwtService.sign(user),
+            user: this.omit(user, ['password'])
+        };;
     }
 }

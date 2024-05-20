@@ -23,7 +23,7 @@ export class TasksController {
   constructor(private tasksService: TasksService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post("create")
   @ApiOperation({ summary: 'Create a new task' })
   @ApiResponse({ status: 201, description: 'The task has been successfully created.', type: Task })
   async createTask(@Body() createTaskDto: CreateTaskDto) {
