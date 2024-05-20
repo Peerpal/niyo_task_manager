@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Niyo')
     .setDescription("The Niyo Task Manager App")
     .setVersion('0.1')
+    .addTag('tasks')
     .addBearerAuth()
     .build();
 

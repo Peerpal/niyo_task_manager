@@ -25,6 +25,13 @@ export class TasksService {
     });
   }
 
+
+  async get(id: number): Promise<Task> {
+    return await this.prisma.task.findFirst({
+      where: { id },
+    });
+  }
+
   async updateTask(userId: number, taskId: number, data: Partial<Task>): Promise<Task> {
     const task = await this.prisma.task.findUnique({ where: { id: taskId } });
 
@@ -44,8 +51,9 @@ export class TasksService {
 
   async deleteTask(userId: number, taskId: number): Promise<Task> {
     const task = await this.prisma.task.findUnique({ where: { id: taskId } });
+    console.log(task)
 
-    if (!task || task.userId !== userId) {
+    if (!task || task.userId != userId) {
       throw new NotFoundException('Task not found or you do not have permission to delete this task');
     }
 
